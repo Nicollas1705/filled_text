@@ -10,7 +10,7 @@ This package provides a class and a widget that calculate the available space to
 
 ## Example
 
-![Filled text widget example]()
+![Filled text widget example](https://user-images.githubusercontent.com/58062436/180695238-df8037c6-580d-4bf6-8d5e-1100d0aa57ef.gif)
 
 [Example code](https://github.com/Nicollas1705/filled_text_example)
 
@@ -23,7 +23,7 @@ This package provides a class and a widget that calculate the available space to
 dependencies:
   filled_text:
     git:
-      url: git://github.com/Nicollas1705/filled_text
+      url: https://github.com/Nicollas1705/filled_text
       ref: main
 ```
 
@@ -66,7 +66,7 @@ Widget build(BuildContext context) {
 
 ### Result
 
-![Filled text - Simple example]()
+![Filled text - Simple example](https://user-images.githubusercontent.com/58062436/180695575-e8b151c2-362b-40a5-8a5b-e909e5682739.gif)
 
 
 ### Example code result:
@@ -88,3 +88,26 @@ class FilledTextExample extends StatelessWidget {
   }
 }
 ```
+
+## FilledText options
+
+TODO:
+
+<!-- text
+mainStyle
+initBuilderState()
+isTheTextFinished
+lastIndex
+remainingText
+lineHeigth
+getText()
+nextPage -->
+
+## FilledTextWidget options
+
+TODO:
+
+<!-- filledText
+builder
+isTheFirstOfTheBuilder
+maxLines -->
