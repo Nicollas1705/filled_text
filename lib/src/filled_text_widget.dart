@@ -38,7 +38,7 @@ class FilledTextWidget extends StatelessWidget {
     this.builder,
     this.isTheFirstOfTheBuilder = true,
     this.maxLines,
-  })  : assert(isTheFirstOfTheBuilder || maxLines == null),
+  })  : //assert(isTheFirstOfTheBuilder || maxLines == null),
         super(key: key);
 
   @override
