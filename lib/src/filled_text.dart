@@ -1,6 +1,6 @@
 part of filled_text;
 
-/// Used to calculate the space and fills it with the appropriate text
+/// Used to calculate the available space and fills it with the appropriate [text].
 class FilledText {
   String text;
   TextStyle? mainStyle;
@@ -8,26 +8,26 @@ class FilledText {
   FilledText({
     required this.text,
     this.mainStyle,
-  }) {
-    _words = text.split(_splitChar);
-  }
+  });
 
-  late final List<String> _words;
+  int _splitIndex = 0;
   final String _splitChar = ' ';
-  int _wordIndex = 0;
+  final List<int> _builderPositions = [0];
+  late final List<String> _splittedText = text.split(_splitChar);
 
   /// Used to start the first [FilledTextWidget] of the builder.
   /// If the text needs to be rebuilded from a specific index, set [firstIndex].
-  void initBuilderState([int firstIndex = 0]) => _wordIndex = firstIndex;
+  void _initBuilderState([int firstIndex = 0]) => _splitIndex = firstIndex;
 
   /// Used to know if the text will be finished in the current page.
-  bool get isTheTextFinished => _wordIndex >= _words.length;
+  bool get isTheTextFinished => _splitIndex >= _splittedText.length;
 
   /// Used to get the last index after the build.
-  int get lastIndex => _wordIndex;
+  int get lastIndex => _splitIndex;
 
   /// Used to get the remaining text after the build.
-  String get remainingText => _words.sublist(_wordIndex, _words.length).join(_splitChar);
+  String get remainingText =>
+      _splittedText.sublist(_builderPositions.last, _splittedText.length).join(_splitChar);
 
   /// Used to get the heigth of a line.
   double get lineHeigth => _getTextPainter('', style: mainStyle).size.height;
@@ -39,12 +39,11 @@ class FilledText {
     double maxWidth = double.infinity,
     int? maxLines,
   }) {
-    final TextPainter textPainter = TextPainter(
+    return TextPainter(
       text: TextSpan(text: text, style: style),
       maxLines: maxLines,
       textDirection: TextDirection.ltr,
     )..layout(minWidth: minWidth, maxWidth: maxWidth);
-    return textPainter;
   }
 
   String _removeLastSplit(String text) {
@@ -53,11 +52,10 @@ class FilledText {
   }
 
   /// Use it to get the max text that fills in these [constraints].
-  /// The [constraints] can be provided by [LayoutBuilder] widget.
-  String getText(BoxConstraints constraints, [int? maxLines]) {
+  String _getText(BoxConstraints constraints, [int? maxLines]) {
     String text = '';
-    for (; _wordIndex < _words.length; _wordIndex++) {
-      text += '$_splitChar${_words[_wordIndex]}';
+    for (; _splitIndex < _splittedText.length; _splitIndex++) {
+      text += '$_splitChar${_splittedText[_splitIndex]}';
       if (text[0] == _splitChar) text = text.replaceFirst(_splitChar, '');
 
       final textPainter = _getTextPainter(
@@ -74,6 +72,26 @@ class FilledText {
         break;
       }
     }
+    return text;
+  }
+
+  /// Used by [FilledTextWidget] to calculate and get the max text that fills in these 
+  /// [constraints]. The [constraints] can be provided by a [LayoutBuilder] widget.
+  String computeFilledText({
+    required BoxConstraints constraints,
+    int? maxLines,
+    int builderPosition = 0,
+  }) {
+    _initBuilderState(_builderPositions[builderPosition - 1]);
+
+    final text = _getText(constraints, maxLines);
+
+    if (builderPosition < _builderPositions.length) {
+      _builderPositions[builderPosition] = _splitIndex;
+    } else {
+      _builderPositions.add(_splitIndex);
+    }
+
     return text;
   }
 

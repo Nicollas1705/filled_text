@@ -6,40 +6,54 @@ part of filled_text;
 class FilledTextWidget extends StatelessWidget {
   final FilledText filledText;
 
-  /// If it is not the first [FilledTextWidget] builded in the page, set as [false].
-  /// 
-  /// Don't use the non-first [FilledTextWidget] in a separated builder from the first one.
-  final bool isTheFirstOfTheBuilder;
-
-  /// It can be used to build a different child.
+  /// If it is not the first [FilledTextWidget] of the page, then, set its builder position with
+  /// [builderPosition].
+  ///
   /// Example:
   /// ```dart
-  /// builder: (String text, TextStyle? style) => Text(
-  ///   text,
-  ///   style: style,
-  ///   textAlign: TextAlign.center,
+  /// FilledTextWidget(
+  ///   filledText: filledText,
+  ///   // Default is 1, then, it does not need to be setted
+  /// ),
+  /// SomeOtherWidget(),
+  /// FilledTextWidget(
+  ///   filledText: filledText,
+  ///   builderPosition: 2, // 2nd position
+  /// ),
+  /// SomeOtherWidget(),
+  /// FilledTextWidget(
+  ///   filledText: filledText,
+  ///   builderPosition: 3, // 3rd position
+  /// ),
+  /// ```
+  final int builderPosition;
+
+  /// It can be used to build a child with another [Widget].
+  /// The [text] and the [style] is the same of [filledText].
+  ///
+  /// Example:
+  /// ```dart
+  /// FilledTextWidget(
+  ///   filledText: filledText,
+  ///   builder: (String text, TextStyle? style) => Text(
+  ///     text,
+  ///     style: style,
+  ///     textAlign: TextAlign.center,
+  ///   ),
   /// ),
   /// ```
   final Widget Function(String text, TextStyle? style)? builder;
 
-  /// **Note: be careful using this parameter.**
-  ///
-  /// If [isTheFirstOfTheBuilder] is [false], the [maxLines] can't be setted.
-  ///
-  /// If needs to set a [maxLines], use only in the first [FilledTextWidget].
-  ///
-  /// Tip: if using this, try to use a [Flexible] as its parent
-  /// (if not using another [Flexible] or [Expanded] in the [Row]/[Column]).
+  /// Used to set a max height constraint to fill with the lines according to [maxLines].
   final int? maxLines;
 
   const FilledTextWidget({
     Key? key,
     required this.filledText,
     this.builder,
-    this.isTheFirstOfTheBuilder = true,
+    this.builderPosition = 1,
     this.maxLines,
-  })  : //assert(isTheFirstOfTheBuilder || maxLines == null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +63,14 @@ class FilledTextWidget extends StatelessWidget {
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          if (isTheFirstOfTheBuilder) filledText.initBuilderState();
-          final text = filledText.getText(constraints, maxLines);
+          final text = filledText.computeFilledText(
+            constraints: constraints,
+            builderPosition: builderPosition,
+            maxLines: maxLines,
+          );
 
-          if (builder != null) return builder!(text, filledText.mainStyle);
-          return Text(text, style: filledText.mainStyle);
+          return builder?.call(text, filledText.mainStyle) ??
+              Text(text, style: filledText.mainStyle);
         },
       ),
     );
