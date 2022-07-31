@@ -7,6 +7,9 @@ This package provides a class and a widget that calculate the available space to
 <br>
 <br>
 
+# TODO
+
+## Improve the examples and finish this README
 
 ## Example
 
@@ -93,21 +96,50 @@ class FilledTextExample extends StatelessWidget {
 
 TODO:
 
-<!-- text
+<!-- 
+// This is a required attribute, the text that will fill the Widget
+text
+
+// Can be setted a style to the text
 mainStyle
-initBuilderState()
 isTheTextFinished
 lastIndex
 remainingText
 lineHeigth
-getText()
-nextPage -->
+computeFilledText
+nextPage 
+-->
 
 ## FilledTextWidget options
 
 TODO:
 
-<!-- filledText
+<!-- 
+filledText
+builderPosition
 builder
-isTheFirstOfTheBuilder
-maxLines -->
+maxLines 
+-->
+
+## TODO
+
+### [ ] Add a way to put TextSpan's
+
+Nowadays, the package doesn't support TextSpan (InlineSpan).
+
+Example:
+
+```dart
+final filledText = FilledText(
+  inlineText: TextSpan(text: 'Some text.'),
+);
+```
+
+Maybe can be done a new class for this (moving the shared attributes/methods to a super class).
+
+Example:
+
+```dart
+final example = FilledTextSpan(...);
+final example = FilledTextInlineSpan(...);
+```
