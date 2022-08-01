@@ -7,9 +7,6 @@ This package provides a class and a widget that calculate the available space to
 <br>
 <br>
 
-# TODO
-
-## Improve the examples and finish this README
 
 ## Example
 
@@ -67,6 +64,7 @@ Widget build(BuildContext context) {
 }
 ```
 
+
 ### Result
 
 ![Filled text - Simple example](https://user-images.githubusercontent.com/58062436/180695575-e8b151c2-362b-40a5-8a5b-e909e5682739.gif)
@@ -92,38 +90,120 @@ class FilledTextExample extends StatelessWidget {
 }
 ```
 
-## FilledText options
 
-TODO:
+# FilledText options
 
-<!-- 
-// This is a required attribute, the text that will fill the Widget
-text
+## text and mainStyle
 
-// Can be setted a style to the text
-mainStyle
-isTheTextFinished
-lastIndex
-remainingText
-lineHeigth
-computeFilledText
-nextPage 
--->
+These attributes are to set the [text] that will fill the available space and its [style].
+It is defined in the [FilledText] constructor.
 
-## FilledTextWidget options
+The [mainStyle] can be not defined.
 
-TODO:
 
-<!-- 
-filledText
-builderPosition
-builder
-maxLines 
--->
+## isTheTextFinished
 
-## TODO
+This method can be used to check if the [text] finished in the page.
 
-### [ ] Add a way to put TextSpan's
+It can be used for example to show/hide a button to go to the next page of a book.
+
+Click [here](https://github.com/Nicollas1705/filled_text_example) to check the project example (using multiple pages with isTheTextFinished).
+
+
+## remainingText
+
+This method can be used to get the remaining text. If there is no text, it will return an empty String.
+
+
+## lineHeigth
+
+This method can be used to get a single line heigth according to the style defined on [mainStyle].
+
+
+## computeFilledText
+
+This method is used by [FilledTextWidget] to get the text based on the available space and compute the usage of multiple [FilledTextWidget] in a single page.
+
+To use this, needs a [constraints] (provided by [LayoutBuilder] widget).
+
+
+## nextPage
+
+This method can be used to pass a new instance of [FilledText] with the [remainingText] of the previous [FilledText].
+
+Example:
+
+```dart
+Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (_) => AnotherPage(
+      filledText: filledText.nextPage,
+    ),
+  ),
+);
+```
+
+
+# FilledTextWidget options
+
+## filledText
+
+This is a required attribute to get the [FilledText] instance.
+
+
+## builderPosition
+
+This is used only if there are more than one [FilledTextWidget] in the same page.
+
+To use this, set it according to [FilledTextWidget]'s position in the page.
+
+Example:
+
+```dart
+FilledTextWidget(
+  filledText: filledText,
+  // Default builderPosition is 1, then, it does not need to be setted
+),
+SomeOtherWidget(),
+FilledTextWidget(
+  filledText: filledText,
+  builderPosition: 2, // 2nd position
+),
+SomeOtherWidget(),
+FilledTextWidget(
+  filledText: filledText,
+  builderPosition: 3, // 3rd position
+),
+```
+
+
+## builder
+
+This is used to set a different [Widget] in the [FilledTextWidget], or different attributes to a normal text, like [TextAlign.center].
+
+Example:
+
+```dart
+FilledTextWidget(
+  filledText: filledText,
+  builder: (String text, TextStyle? style) => Text(
+    text,
+    style: style,
+    textAlign: TextAlign.center,
+  ),
+),
+```
+
+
+## maxLines
+
+This can be used to set the maximum number of lines.
+
+
+# TODO
+
+## [ ] Add a way to put TextSpan (InlineText)
 
 Nowadays, the package doesn't support TextSpan (InlineSpan).
 
@@ -143,3 +223,12 @@ Example:
 final example = FilledTextSpan(...);
 final example = FilledTextInlineSpan(...);
 ```
+
+
+## [ ] Add a easy way to use StringBuffer
+
+If needed to show a whole book, the complete String can be expansive in terms of memory. Using a [StringBuffer], it can be done easier.
+
+Due to nowadays not having a easy way to use [StringBuffer], there are another approach that can be done to try to solve this:
+
+Can be get a part of the whole [text] that ensures the available space will be filled. Then, to the next page, can be given a new [FilledText] with the previous [FilledText.remainingText] + another part of the whole [text].

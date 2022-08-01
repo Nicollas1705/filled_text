@@ -22,9 +22,6 @@ class FilledText {
   /// Used to know if the text will be finished in the current page.
   bool get isTheTextFinished => _splitIndex >= _splittedText.length;
 
-  /// Used to get the last index after the build.
-  int get lastIndex => _splitIndex;
-
   /// Used to get the remaining text after the build.
   String get remainingText =>
       _splittedText.sublist(_builderPositions.last, _splittedText.length).join(_splitChar);
@@ -75,14 +72,30 @@ class FilledText {
     return text;
   }
 
-  /// Used by [FilledTextWidget] to calculate and get the max text that fills in these 
+  /// Used by [FilledTextWidget] to calculate and get the max text that fills in these
   /// [constraints]. The [constraints] can be provided by a [LayoutBuilder] widget.
   String computeFilledText({
     required BoxConstraints constraints,
     int? maxLines,
-    int builderPosition = 0,
+    int builderPosition = 1,
   }) {
-    _initBuilderState(_builderPositions[builderPosition - 1]);
+    try {
+      _initBuilderState(_builderPositions[builderPosition - 1]);
+    } catch (error) {
+      log('$error');
+      log(
+        'This can be caused by a FilledTextWidget with a wrong builderPosition setted. '
+        'If the first FilledTextWidget builded is setted with builderPosition = 2, it will cause this error. '
+        'It can also be caused by putting one FilledTextWidget into an Expanded/Flexible and the next one not. '
+        'Since the Expanded/Flexible Widgets is the last ones to be builded in the Colum/Row, it can cause this error.',
+      );
+      log(
+        'There are some ways to solve this:\n'
+        '  1: Remove the Expanded/Flexible Widgets or add it to all FilledTextWidget.\n'
+        '  2: Try to rebuild the next FilledTextWidget after the previous FilledTextWidget build.',
+      );
+      _initBuilderState();
+    }
 
     final text = _getText(constraints, maxLines);
 
@@ -96,6 +109,7 @@ class FilledText {
   }
 
   /// Use it to pass this [FilledText] to another page as parameter.
+  /// It returns a new instance of [FilledText] with the [remainingText].
   FilledText get nextPage {
     return FilledText(
       text: remainingText,

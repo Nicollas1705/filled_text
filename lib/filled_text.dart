@@ -1,5 +1,7 @@
 library filled_text;
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 part 'src/filled_text.dart';

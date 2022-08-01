@@ -13,7 +13,7 @@ class FilledTextWidget extends StatelessWidget {
   /// ```dart
   /// FilledTextWidget(
   ///   filledText: filledText,
-  ///   // Default is 1, then, it does not need to be setted
+  ///   // Default builderPosition is 1, then, it does not need to be setted
   /// ),
   /// SomeOtherWidget(),
   /// FilledTextWidget(
@@ -70,7 +70,10 @@ class FilledTextWidget extends StatelessWidget {
           );
 
           return builder?.call(text, filledText.mainStyle) ??
-              Text(text, style: filledText.mainStyle);
+              Visibility(
+                visible: text.isNotEmpty,
+                child: Text(text, style: filledText.mainStyle),
+              );
         },
       ),
     );
