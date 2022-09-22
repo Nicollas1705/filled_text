@@ -14,6 +14,8 @@ This package provides a class and a widget that calculate the available space to
 
 [Example code](https://github.com/Nicollas1705/filled_text_example)
 
+[Source code](https://github.com/Nicollas1705/filled_text)
+
 
 ## Usage
 
