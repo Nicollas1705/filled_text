@@ -21,10 +21,7 @@ This package provides a class and a widget that calculate the available space to
 
 ```yaml
 dependencies:
-  filled_text:
-    git:
-      url: https://github.com/Nicollas1705/filled_text
-      ref: main
+  filled_text: ^1.0.0
 ```
 
 2. Import the library:
