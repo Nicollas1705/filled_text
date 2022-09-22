@@ -16,6 +16,8 @@ This package provides a class and a widget that calculate the available space to
 
 [Source code](https://github.com/Nicollas1705/filled_text)
 
+[Pub.dev package](https://pub.dev/packages/filled_text)
+
 
 ## Usage
 
