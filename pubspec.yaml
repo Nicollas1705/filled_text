@@ -1,5 +1,5 @@
 name: filled_text
-description: This package provides a class and a widget that calculate the available space to fill with a text, while the remaining text can be put in other part of the page (or in another page).
+description: This package provides a class and a widget that calculate the available space to fill with a text, while the remaining text can be put in other part of the page or in another page.
 version: 1.0.0
 homepage: https://github.com/Nicollas1705/filled_text
 
